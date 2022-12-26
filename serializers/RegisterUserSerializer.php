@@ -1,8 +1,8 @@
 <?php
-require_once 'User.php';
 require_once 'Serializer.php';
+require_once '../models/User.php';
 
-class UserSerializer extends Serializer
+class RegisterUserSerializer extends Serializer
 {
     public $model = User::class;
 

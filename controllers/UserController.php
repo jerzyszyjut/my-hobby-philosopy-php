@@ -2,7 +2,8 @@
 require_once '../views/LayoutView.php';
 require_once '../views/RedirectView.php';
 require_once '../NotificationsHandler.php';
-require_once '../models/UserSerializer.php';
+require_once '../serializers/RegisterUserSerializer.php';
+require_once '../serializers/LoginUserSerializer.php';
 require_once '../models/User.php';
 
 class UserController
@@ -27,7 +28,8 @@ class UserController
             'password' => $_POST['password'],
             'repassword' => $_POST['repassword']
         ];
-        $serializer = new UserSerializer($data);
+
+        $serializer = new RegisterUserSerializer($data);
 
         if ($serializer->is_valid()) {
             $serializer->save();
@@ -54,25 +56,23 @@ class UserController
             }
         }
 
-        if($_POST['login'] == '' || $_POST['password'] == '') {
-            NotificationsHandler::add_error('/login', 'Login and password are required');
+        $data = [
+            'login' => $_POST['login'],
+            'password' => $_POST['password']
+        ];
+
+        $serializer = new LoginUserSerializer($data);
+
+        if ($serializer->is_valid()) {
+            $serializer->save();
+            $_SESSION['user_id'] = $serializer->instance->id;
+            NotificationsHandler::add_info('/', 'Logged in successfully');
+            return new RedirectView('/');
+        } else {
+            $errors = $serializer->get_errors();
+            NotificationsHandler::add_errors('/login', $errors);
             return new RedirectView('/login');
         }
-
-        $login = $_POST['login'];
-        $password = $_POST['password'];
-
-        $user = User::get(['login' => $login]);
-
-        if ($user) {
-            if($user->check_password($password)) {
-                $_SESSION['user_id'] = $user->id;
-                NotificationsHandler::add_info('/', 'Logged in');
-                return new RedirectView('/');
-            }
-        }
-        NotificationsHandler::add_error('/login', 'Invalid login or password');
-        return new RedirectView('/login');
     }
 
     public function logout(): RedirectView

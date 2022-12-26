@@ -1,78 +1,64 @@
 <?php
 require_once 'Serializer.php';
-require_once 'Image.php';
+require_once '../models/Image.php';
 require_once '../utils/ImageTransformer.php';
 
 class ImageSerializer extends Serializer
 {
     public $model = Image::class;
 
-    private function validate_format($format): bool
+    private function validate_format($format)
     {
         $valid_formats = ['jpg', 'png', 'jpeg'];
         if(!(in_array($format, $valid_formats))) {
-            $this->add_error( 'Invalid format, only jpg and png are allowed');
-            return false;
+            $this->add_error('Invalid format, only jpg and png are allowed');
         }
-        return true;
     }
 
-    private function validate_image($image): bool
+    private function validate_image($image)
     {
         $file_size = $image['size'];
+        if($file_size <= 0) {
+            $this->add_error('Invalid image');
+        }
         if ($file_size > 1024 * 1024) {
             $this->add_error('Image is too large, max size is 1MB');
-            return false;
         }
-
         $file_path = $image['tmp_name'];
         $format = explode('/', mime_content_type($file_path))[1];
-        if (!$this->validate_format($format)) {
-            return false;
-        }
-        return true;
+        $this->validate_format($format);
     }
 
-    protected function validate_title($title): bool
+    protected function validate_title($title)
     {
         if (strlen($title) < 3) {
             $this->add_error('Title must be at least 3 characters long');
-            return false;
         } else if (strlen($title) > 20) {
             $this->add_error('Title must be at most 20 characters long');
-            return false;
         }
-        return true;
     }
 
-    protected function validate_author($author): bool
+    protected function validate_author($author)
     {
         if (strlen($author) < 3) {
             $this->add_error('Author must be at least 3 characters long');
-            return false;
         } else if (strlen($author) > 20) {
             $this->add_error('Author must be at most 20 characters long');
-            return false;
         }
-        return true;
     }
 
-    protected function validate_visibility($visibility): bool
+    protected function validate_visibility($visibility)
     {
         if (!in_array($visibility, ['public', 'private'])) {
             $this->add_error('Visibility must be either public or private');
-            return false;
         }
-        return true;
     }
 
-    protected function validate_watermark($watermark): bool
+    protected function validate_watermark($watermark)
     {
         if (strlen($watermark) === 0) {
             $this->add_error('Watermark must be at least 1 character long');
-            return false;
         }
-        return true;
     }
 
     protected function validate()

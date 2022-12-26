@@ -10,7 +10,7 @@
         echo '<h2>Widoczność</h2>';
         echo '<label>';
         echo '<input type="radio" name="visibility" value="public" checked>';
-        echo '<span>Publiczny</span>';
+        echo '<span>Publiczne</span>';
         echo '</label>';
         echo '<label>';
         echo '<input type="radio" name="visibility" value="private">';

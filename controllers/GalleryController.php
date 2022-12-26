@@ -1,10 +1,11 @@
 <?php
 require_once '../views/LayoutView.php';
 require_once '../views/RedirectView.php';
-require_once '../models/ImageSerializer.php';
+require_once '../serializers/ImageSerializer.php';
 require_once '../models/Image.php';
 require_once '../models/User.php';
 require_once '../NotificationsHandler.php';
+require_once '../utils/GalleryUtils.php';
 
 class GalleryController
 {
@@ -15,29 +16,19 @@ class GalleryController
             $page = $_GET['page'];
         }
 
-        $query = [];
-
-        if (isset($_SESSION['user_id'])) {
-            $user = User::get(['_id' => new MongoDB\BSON\ObjectId($_SESSION['user_id'])]);
-            if($user) {
-                $query['$or'] = [
-                    ['visibility' => 'public'],
-                    ['author' => $user->login]
-                ];
-            } else {
-                $query['visibility'] = 'public';
-            }
-        } else {
-            $query['visibility'] = 'public';
-        }
-
-        $images = Image::get_page($page, $query);
-        $next_page_exists = Image::get_page($page + 1) != null;
         $favourites = [];
         if (isset($_SESSION['favourites'])) {
             $favourites = $_SESSION['favourites'];
         }
-        return new LayoutView("gallery", ['images' => $images, 'page' => $page, 'favourites' => $favourites, 'next_page_exists' => $next_page_exists]);
+
+        $user_id = null;
+        if (isset($_SESSION['user_id'])) {
+            $user_id = $_SESSION['user_id'];
+        }
+
+        $data = GalleryUtils::get_images($page, $user_id);
+
+        return new LayoutView("gallery", ['images' => $data['images'], 'page' => $page, 'favourites' => $favourites, 'next_page_exists' => $data['next_page_exists']]);
     }
 
     public function upload_form(): LayoutView
@@ -52,7 +43,7 @@ class GalleryController
 
     public function upload(): RedirectView
     {
-        if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
+        if (isset($_FILES['image'])) {
             $fields = ['title', 'author', 'watermark', 'visibility'];
             foreach ($fields as $field) {
                 if (!isset($_POST[$field])) {
@@ -60,7 +51,7 @@ class GalleryController
                 }
             }
 
-            if(!isset($_SESSION['user_id'])) {
+            if (!isset($_SESSION['user_id'])) {
                 $_POST['visibility'] = 'public';
             }
 
@@ -73,6 +64,7 @@ class GalleryController
             ];
 
             $serializer = new ImageSerializer($data);
+
             if ($serializer->is_valid()) {
                 $serializer->save();
                 return new RedirectView('/gallery');

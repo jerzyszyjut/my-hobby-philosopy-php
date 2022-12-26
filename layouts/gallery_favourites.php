@@ -19,6 +19,5 @@
         }
         ?>
     </div>
-    <button type="submit">Usuń zaznaczone z ulubionych</button>
+    <button type="submit">Usuń zaznaczone z zapamiętanych</button>
 </form>
-x

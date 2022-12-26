@@ -24,7 +24,7 @@
         }
         ?>
     </div>
-    <button type="submit">Dodaj zaznaczone do ulubionych</button>
+    <button type="submit">Zapamiętaj wybrane</button>
 </form>
 <div class="gallery__navigation">
     <?php

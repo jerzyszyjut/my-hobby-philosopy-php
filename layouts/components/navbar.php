@@ -18,6 +18,9 @@
         ];
         foreach ($menu as $path => $name) {
             $active = $path === $_SERVER["REQUEST_URI"] ? 'active' : '';
+            if($path === '/gallery' && substr($_SERVER["REQUEST_URI"], 0, 8) === '/gallery') {
+                $active = 'active';
+            }
             echo "<li class='navigation__list__element {$active}'><a class='navigation__link' href='{$path}'>{$name}</a></li>";
         }
         ?>
