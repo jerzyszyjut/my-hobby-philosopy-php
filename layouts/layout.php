@@ -13,7 +13,6 @@ require_once '../layouts/components/navbar.php';
 
 <div class="wrapper">
     <?php
-    require_once '../NotificationsHandler.php';
     if ($errors) {
         foreach ($errors as $error) {
             echo "<p class='error'>{$error}</p>";

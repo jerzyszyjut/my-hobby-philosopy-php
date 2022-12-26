@@ -32,5 +32,8 @@ $router->get('/login', 'UserController::login_form');
 $router->post('/login_user', 'UserController::login_user');
 $router->get('/logout', 'UserController::logout');
 
+$router->errors['404'] = 'BasicWebsiteController::error404';
+$router->errors['403'] = 'BasicWebsiteController::error403';
+
 $view = $router->dispatch();
 $view->render();

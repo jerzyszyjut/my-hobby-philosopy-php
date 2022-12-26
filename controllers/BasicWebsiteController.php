@@ -1,33 +1,50 @@
 <?php
 require_once '../views/LayoutView.php';
 
-class BasicWebsiteController {
+class BasicWebsiteController
+{
     public function index(): LayoutView
     {
         return new LayoutView("index_page");
     }
+
     public function quotes(): LayoutView
     {
         return new LayoutView("quotes");
     }
+
     public function settings(): LayoutView
     {
         return new LayoutView("settings");
     }
+
     public function sources(): LayoutView
     {
         return new LayoutView("sources");
     }
+
     public function presocratics(): LayoutView
     {
         return new LayoutView("presocratics");
     }
+
     public function spa_philosophers(): LayoutView
     {
         return new LayoutView("spa_philosophers");
     }
+
     public function remaining_philosophers(): LayoutView
     {
         return new LayoutView("remaining_philosophers");
+    }
+
+    public function error404(): LayoutView
+    {
+        return new LayoutView("404");
+    }
+
+    public function error403(): LayoutView
+    {
+        return new LayoutView("403");
     }
 }

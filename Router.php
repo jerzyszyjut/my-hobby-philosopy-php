@@ -1,6 +1,8 @@
 <?php
 class Router {
     private $get;
+    private $post;
+    public $errors;
 
     public function __construct() {
         $this->get = [];
