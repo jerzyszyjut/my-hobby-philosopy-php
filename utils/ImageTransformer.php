@@ -15,7 +15,7 @@ class ImageTransformer
         $format = explode('/', mime_content_type($file))[1];
         $create = "imagecreatefrom{$format}";
         $img = $create($file);
-        $color = imagecolorallocate($img, 0xff, 0xff, 0xff);
+        $color = imagecolorallocate($img, 0xff, 0xc0, 0xcb);
         $x = 10;
         $y = 20;
         $angle = 0;
