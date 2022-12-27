@@ -101,9 +101,11 @@ class GalleryController
         }
 
         foreach ($_POST['favourite'] as $image_id) {
-            $image = Image::get(['_id' => new MongoDB\BSON\ObjectId($image_id)]);
-            if ($image) {
-                $_SESSION['favourites'][] = $image_id;
+            if(!in_array($image_id, $_SESSION['favourites'])) {
+                $image = Image::get(['_id' => new MongoDB\BSON\ObjectId($image_id)]);
+                if ($image) {
+                    $_SESSION['favourites'][] = $image_id;
+                }
             }
         }
 
