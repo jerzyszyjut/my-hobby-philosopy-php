@@ -12,21 +12,26 @@ class ImageSerializer extends Serializer
         $valid_formats = ['jpg', 'png', 'jpeg'];
         if(!(in_array($format, $valid_formats))) {
             $this->add_error('Invalid format, only jpg and png are allowed');
+            return false;
         }
+        return true;
     }
 
     private function validate_image($image)
     {
         $file_size = $image['size'];
+        $file_path = $image['tmp_name'];
+        $format = explode('/', mime_content_type($file_path))[1];
+        if(!$this->validate_format($format)) {
+            return;
+        }
         if($file_size <= 0) {
             $this->add_error('Invalid image');
+            return;
         }
         if ($file_size > 1024 * 1024) {
             $this->add_error('Image is too large, max size is 1MB');
         }
-        $file_path = $image['tmp_name'];
-        $format = explode('/', mime_content_type($file_path))[1];
-        $this->validate_format($format);
     }
 
     protected function validate_title($title)

@@ -19,8 +19,13 @@ class ImageTransformer
         $angle = 0;
         $font_size = 20;
         $font = "../web/static/comici.ttf";
+
+        $type_space = imagettfbbox($font_size, 0, $font, $text);
+
+        $image_height = abs($type_space[5] - $type_space[1]) + 10;
+
         $x = 5;
-        $y = 5;
+        $y = $image_height - 5;
 
         imagettftext($img, $font_size, $angle, $x, $y, $color, $font, $text);
         imagepng($img, $path);
