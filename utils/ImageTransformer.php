@@ -16,11 +16,13 @@ class ImageTransformer
         $create = "imagecreatefrom{$format}";
         $img = $create($file);
         $color = imagecolorallocate($img, 0xff, 0xc0, 0xcb);
-        $x = 10;
-        $y = 20;
         $angle = 0;
         $font_size = 20;
-        imagettftext($img, $font_size, $angle, $x, $y, $color, "../web/comici.ttf", $text);
+        $font = "../web/static/comici.ttf";
+        $x = 5;
+        $y = 5;
+
+        imagettftext($img, $font_size, $angle, $x, $y, $color, $font, $text);
         imagepng($img, $path);
         imagedestroy($img);
     }
