@@ -22,10 +22,10 @@ class ImageTransformer
 
         $type_space = imagettfbbox($font_size, 0, $font, $text);
 
-        $image_height = abs($type_space[5] - $type_space[1]) + 10;
+        $image_height = abs($type_space[5] - $type_space[1]);
 
         $x = 5;
-        $y = $image_height - 5;
+        $y = $image_height + 5;
 
         imagettftext($img, $font_size, $angle, $x, $y, $color, $font, $text);
         imagepng($img, $path);
