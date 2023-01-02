@@ -7,27 +7,22 @@ class ImageSerializer extends Serializer
 {
     public $model = Image::class;
 
-    private function validate_format($format)
+    private function validate_format($image)
     {
+        $file_path = $image['tmp_name'];
+        $format = explode('/', mime_content_type($file_path))[1];
         $valid_formats = ['jpg', 'png', 'jpeg'];
         if(!(in_array($format, $valid_formats))) {
             $this->add_error('Invalid format, only jpg and png are allowed');
-            return false;
         }
-        return true;
     }
 
     private function validate_image($image)
     {
         $file_size = $image['size'];
-        $file_path = $image['tmp_name'];
-        $format = explode('/', mime_content_type($file_path))[1];
-        if(!$this->validate_format($format)) {
-            return;
-        }
+
         if($file_size <= 0) {
             $this->add_error('Invalid image');
-            return;
         }
         if ($file_size > 1024 * 1024) {
             $this->add_error('Image is too large, max size is 1MB');
@@ -69,6 +64,7 @@ class ImageSerializer extends Serializer
     protected function validate()
     {
         $this->validate_image($this->data['image']);
+        $this->validate_format($this->data['image']);
         $this->validate_title($this->data['title']);
         $this->validate_author($this->data['author']);
         $this->validate_visibility($this->data['visibility']);

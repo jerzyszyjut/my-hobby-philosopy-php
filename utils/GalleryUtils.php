@@ -21,7 +21,7 @@ class GalleryUtils
         }
 
         $images = Image::get_page($page, $query);
-        $next_page_exists = Image::get_page($page + 1) != null;
+        $next_page_exists = Image::get_page($page + 1, $query) != null;
 
         return ['images' => $images, 'next_page_exists' => $next_page_exists];
     }
